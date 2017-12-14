@@ -7,7 +7,7 @@
  *
  * @package blesta
  * @subpackage blesta.components.gateways.sslcommerz
- * @copyright Copyright (c) 2010, Phillips Data, Inc.
+ * @copyright Copyright (c) 2017, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
@@ -16,12 +16,12 @@ class Sslcommerz extends NonmerchantGateway
     /**
      * @var string The version of this gateway
      */
-    private static $version = '1.0.0';
+    private static $version = '1.1.0';
 
     /**
      * @var string The authors of this gateway
      */
-    private static $authors = [['name'=>'Phillips Data, Inc.','url'=>'http://www.blesta.com']];
+    private static $authors = [['name' => 'Phillips Data, Inc.','url' => 'http://www.blesta.com']];
 
     /**
      * @var array An array of meta data for this gateway
@@ -189,8 +189,8 @@ class Sslcommerz extends NonmerchantGateway
      *      - name The local name of the country
      *  - country An array of country info including:
      *      - alpha2 The 2-character country code
-     *      - alpha3 The 3-cahracter country code
-     *      - name The english name of the country
+     *      - alpha3 The 3-character country code
+     *      - name The English name of the country
      *      - alt_name The local name of the country
      *  - zip The zip/postal code of the contact
      * @param float $amount The amount to charge this contact
@@ -256,8 +256,6 @@ class Sslcommerz extends NonmerchantGateway
 
         if (!empty($client_phone)) {
             $client_phone = preg_replace('/[^0-9]/', '', $client_phone);
-        } else {
-            $client_phone = '01711111111'; // Dummy phone number
         }
 
         // Set all invoices to pay
@@ -266,7 +264,8 @@ class Sslcommerz extends NonmerchantGateway
         }
 
         // Build the payment request
-        $notification_url = Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id') . '/sslcommerz/?client_id=' . $contact_info['client_id'];
+        $notification_url = Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id')
+            . '/sslcommerz/?client_id=' . $contact_info['client_id'];
         $params = [
             'total_amount' => $this->ifSet($amount),
             'currency' => $this->ifSet($this->currency),
@@ -365,7 +364,8 @@ class Sslcommerz extends NonmerchantGateway
         $status = 'error';
         $return_status = false;
 
-        if (isset($response->status)) {
+        // Validate the transaction status and the post parameters returned by SSLCommerz
+        if (isset($response->status) && $this->validateHash($post)) {
             switch ($response->status) {
                 case 'VALID':
                     $status = 'approved';
@@ -400,6 +400,29 @@ class Sslcommerz extends NonmerchantGateway
     }
 
     /**
+     * Verifies the validation fields returned by SSLCommerz
+     *
+     * @param array $post A list of data returned by SSLCommerz
+     * @return boolean Whether the post data given matches the hash
+     */
+    private function validateHash(array $post)
+    {
+        $hash_string = '';
+        if (isset($post['verify_key']) && isset($post['verify_sign'])) {
+            $key_fields = explode(',', $post['verify_key']);
+            $key_fields[] = 'store_passwd';
+            $post['store_passwd'] = md5($this->meta['store_password']);
+
+            sort($key_fields);
+            foreach ($key_fields as $key_field) {
+                $hash_string .= $key_field . '=' . $post[$key_field] . '&';
+            }
+        }
+
+        return md5(rtrim($hash_string, '&')) == $post['verify_sign'];
+    }
+
+    /**
      * Returns data regarding a success transaction. This method is invoked when
      * a client returns from the non-merchant gateway's web site back to Blesta.
      *
@@ -418,69 +441,19 @@ class Sslcommerz extends NonmerchantGateway
      */
     public function success(array $get, array $post)
     {
-        // Load library methods
-        Loader::load(dirname(__FILE__) . DS . 'lib' . DS . 'sslcommerz_api.php');
-        $api = new SslcommerzApi($this->meta['store_id'], $this->meta['store_password'], $this->meta['dev_mode']);
-
-        // Get invoices
-        $invoices = $this->ifSet($post['value_a']);
-
-        // Get the transaction details
-        $response = $api->getPayment($post['tran_id']);
-
-        // Get payment details
-        $amount = number_format($response->currency_amount, 2, '.', '');
-        $currency = $response->currency_type;
-
+        // Unfortunately SSLCommerz does not return post data on the redirect.
         // Get client id
-        $client_id = $this->ifSet($get['client_id'], $post['value_b']);
+        $client_id = $this->ifSet($get['client_id']);
 
         return [
             'client_id' => $client_id,
-            'amount' => $amount,
-            'currency' => $currency,
-            'status' => 'approved', // we wouldn't be here if it weren't, right?
+            'amount' => null,
+            'currency' => null,
+            'status' => 'approved',
             'reference_id' => null,
-            'transaction_id' => $this->ifSet($response->bank_tran_id, $post['tran_id']),
-            'invoices' => $this->unserializeInvoices($invoices)
+            'transaction_id' => null,
+            'invoices' => null
         ];
-    }
-
-    /**
-     * Captures a previously authorized payment.
-     *
-     * @param string $reference_id The reference ID for the previously authorized transaction
-     * @param string $transaction_id The transaction ID for the previously authorized transaction.
-     * @param $amount The amount.
-     * @param array $invoice_amounts
-     * @return array An array of transaction data including:
-     *  - status The status of the transaction (approved, declined, void, pending, reconciled, refunded, returned)
-     *  - reference_id The reference ID for gateway-only use with this transaction (optional)
-     *  - transaction_id The ID returned by the remote gateway to identify this transaction
-     *  - message The message to be displayed in the interface in addition to the standard
-     *      message for this transaction status (optional)
-     */
-    public function capture($reference_id, $transaction_id, $amount, array $invoice_amounts = null)
-    {
-        $this->Input->setErrors($this->getCommonError('unsupported'));
-    }
-
-    /**
-     * Void a payment or authorization.
-     *
-     * @param string $reference_id The reference ID for the previously submitted transaction
-     * @param string $transaction_id The transaction ID for the previously submitted transaction
-     * @param string $notes Notes about the void that may be sent to the client by the gateway
-     * @return array An array of transaction data including:
-     *  - status The status of the transaction (approved, declined, void, pending, reconciled, refunded, returned)
-     *  - reference_id The reference ID for gateway-only use with this transaction (optional)
-     *  - transaction_id The ID returned by the remote gateway to identify this transaction
-     *  - message The message to be displayed in the interface in addition to the standard
-     *      message for this transaction status (optional)
-     */
-    public function void($reference_id, $transaction_id, $notes = null)
-    {
-        $this->Input->setErrors($this->getCommonError('unsupported'));
     }
 
     /**

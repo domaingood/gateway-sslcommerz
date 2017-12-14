@@ -4,7 +4,7 @@
  *
  * @package blesta
  * @subpackage blesta.components.modules.sslcommerz
- * @copyright Copyright (c) 2010, Phillips Data, Inc.
+ * @copyright Copyright (c) 2017, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
@@ -98,7 +98,7 @@ class SslcommerzApi
     /**
      * Build the payment request.
      *
-     * @param array $params An array contaning the following arguments:
+     * @param array $params An array containing the following arguments:
      *  - total_amount: The total amount of the sale.
      *  - currency: The currency of the sale.
      *  - tran_id: The unique transaction id.
@@ -109,10 +109,10 @@ class SslcommerzApi
      *  - cus_name: The customer full name.
      *  - cus_email: The customer email address.
      *  - cus_phone: The customer phone number.
-     *  - value_a: Custom paramaeter. (Optional)
-     *  - value_b: Custom paramaeter. (Optional)
-     *  - value_c: Custom paramaeter. (Optional)
-     * @return stdClass An object contaning the api response
+     *  - value_a: Custom parameter. (Optional)
+     *  - value_b: Custom parameter. (Optional)
+     *  - value_c: Custom parameter. (Optional)
+     * @return stdClass An object containing the api response
      */
     public function buildPayment($params)
     {
@@ -122,11 +122,11 @@ class SslcommerzApi
     /**
      * Refund a payment.
      *
-     * @param array $params An array contaning the following arguments:
+     * @param array $params An array containing the following arguments:
      *  - bank_tran_id: The bank transaction id.
      *  - refund_amount: The amount will be refunded.
      *  - refund_remarks: The reason of refund.
-     * @return stdClass An object contaning the api response
+     * @return stdClass An object containing the api response
      */
     public function refundPayment($params)
     {
@@ -137,7 +137,7 @@ class SslcommerzApi
      * Get a payment.
      *
      * @param string $tran_id The unique transaction id.
-     * @return stdClass An object contaning the api response
+     * @return stdClass An object containing the api response
      */
     public function getPayment($tran_id)
     {
