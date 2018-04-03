@@ -16,7 +16,7 @@ class Sslcommerz extends NonmerchantGateway
     /**
      * @var string The version of this gateway
      */
-    private static $version = '1.1.0';
+    private static $version = '1.1.1';
 
     /**
      * @var string The authors of this gateway
@@ -294,7 +294,7 @@ class Sslcommerz extends NonmerchantGateway
             if ($request->status == 'SUCCESS') {
                 $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($request), 'output', true);
 
-                return $this->buildForm($request->redirectGatewayURL);
+                return $this->buildForm($request->GatewayPageURL);
             } else {
                 // The api has been responded with an error, set the error
                 $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($request), 'output', false);
