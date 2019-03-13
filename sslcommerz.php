@@ -368,6 +368,7 @@ class Sslcommerz extends NonmerchantGateway
         if (isset($response->status) && $this->validateHash($post)) {
             switch ($response->status) {
                 case 'VALID':
+                case 'VALIDATED':
                     $status = 'approved';
                     $return_status = true;
                     break;
