@@ -1,6 +1,7 @@
 <?php
 
 $lang['Sslcommerz.name'] = 'SSL Commerz';
+$lang['Sslcommerz.description'] = '';
 $lang['Sslcommerz.store_id'] = 'Store ID';
 $lang['Sslcommerz.store_password'] = 'Store Password';
 $lang['Sslcommerz.dev_mode'] = 'Developer Mode';
