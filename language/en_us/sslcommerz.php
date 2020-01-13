@@ -1,7 +1,7 @@
 <?php
 
 $lang['Sslcommerz.name'] = 'SSL Commerz';
-$lang['Sslcommerz.description'] = '';
+$lang['Sslcommerz.description'] = 'SSLCOMMERZ is the first payment gateway in Bangladesh opening doors for merchants to receive payments on the internet';
 $lang['Sslcommerz.store_id'] = 'Store ID';
 $lang['Sslcommerz.store_password'] = 'Store Password';
 $lang['Sslcommerz.dev_mode'] = 'Developer Mode';

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/blesta/gateway-sslcommerz.svg?branch=master)](https://travis-ci.org/blesta/gateway-sslcommerz) [![Coverage Status](https://coveralls.io/repos/github/blesta/gateway-sslcommerz/badge.svg?branch=master)](https://coveralls.io/github/blesta/gateway-sslcommerz?branch=master)
 
-This is a merchant gateway for Blesta that integrates with [SSL Commerz](https://www.sslcommerz.com/).
+This is a nonmerchant gateway for Blesta that integrates with [SSL Commerz](https://www.sslcommerz.com/).
 
 ## Install the Gateway
 
@@ -32,5 +32,5 @@ your Blesta installation path.
 
 |Blesta Version|Module Version|
 |--------------|--------------|
-|< v4.8.0|v1.1.0|
+|< v4.8.0|v1.1.1|
 |>= v4.8.0|v1.2.0|
