@@ -23,6 +23,8 @@ class Sslcommerz extends NonmerchantGateway
      */
     public function __construct()
     {
+        $this->loadConfig(dirname(__FILE__) . DS . 'config.json');
+
         // Load components required by this gateway
         Loader::loadComponents($this, ['Input']);
 
