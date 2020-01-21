@@ -1,0 +1,13 @@
+{
+	"version": "1.2.0",
+	"name": "Sslcommerz.name",
+	"description": "Sslcommerz.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["BDT"],
+	"signup_url": "https://signup.sslcommerz.com/register"
+}
