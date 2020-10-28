@@ -8,6 +8,9 @@ $lang['Sslcommerz.dev_mode'] = 'Developer Mode';
 $lang['Sslcommerz.dev_mode_note'] = 'Enabling this option will post transactions to the SSL Commerz Sandbox environment. Only enable this option if you are testing with a SSLCommerz Sandbox account.';
 $lang['Sslcommerz.buildprocess.submit'] = 'Pay with SSL Commerz';
 
+$lang['Sslcommerz.ipn'] = 'SSLCOMMERZ IPN';
+$lang['Sslcommerz.ipn_note'] = 'Before you start using this gateway you must configure the following url in the store IPN settings in your SSLCOMMERZ account.';
+
 // Errors
 $lang['Sslcommerz.!error.store_id.valid'] = 'You must enter a valid Store ID.';
 $lang['Sslcommerz.!error.store_password.valid'] = 'You must enter a valid Store Password.';

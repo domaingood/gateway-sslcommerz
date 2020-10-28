@@ -216,15 +216,13 @@ class Sslcommerz extends NonmerchantGateway
         }
 
         // Build the payment request
-        $notification_url = Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id')
-            . '/sslcommerz/?client_id=' . $contact_info['client_id'];
         $params = [
             'total_amount' => $this->ifSet($amount),
             'currency' => $this->ifSet($this->currency),
             'tran_id' => uniqid(),
-            'success_url' => $this->ifSet($notification_url),
-            'fail_url' => $this->ifSet($notification_url),
-            'cancel_url' => $this->ifSet($options['return_url']),
+            'success_url' => $this->ifSet($options['return_url']) . '?client_id=' . $contact_info['client_id'],
+            'fail_url' => $this->ifSet($options['return_url']) . '?client_id=' . $contact_info['client_id'],
+            'cancel_url' => $this->ifSet($options['return_url']) . '?client_id=' . $contact_info['client_id'],
             'emi_option' => 0,
             'cus_name' => $this->Html->concat(
                 ' ',
