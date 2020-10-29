@@ -12,7 +12,7 @@ This is a nonmerchant gateway for Blesta that integrates with [SSL Commerz](http
     composer require blesta/sslcommerz
     ```
 
-2. Upload the source code to a /components/gateways/nonmerchant/sslcommerz/ directory within
+2. Upload the source code to a /components/gateways/nonmerchant/sslcommerz// directory within
 your Blesta installation path.
 
     For example:
